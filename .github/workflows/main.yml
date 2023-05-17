@@ -28,8 +28,9 @@ jobs:
 
       - name: Merge code if tests pass
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GH_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          echo "Merging pull request $pr_number..."
-          gh pr merge $pr_number --merge
+            pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+            echo "Merging pull request $pr_number..."
+            gh pr merge $pr_number --merge
+  
