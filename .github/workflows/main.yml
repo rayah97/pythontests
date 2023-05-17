@@ -4,6 +4,7 @@ on:
   pull_request:
     types: [opened]
 
+
     
 jobs:
   test:
@@ -17,6 +18,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
+
 
       - name: Run unit tests
         run: python -m unittest test_prime_calculator.py
@@ -34,7 +36,17 @@ jobs:
         uses: pullreminders/merge-action@v4
         with:
               github_token: ${{ secrets.GITHUB_TOKEN }}
-              pull_request_number: ${{ github.event.pull_request.number }}
-              strategy: merge
-    
+              script: |
+                const prNumber = context.payload.pull_request.number;
+                const { data: pr } = await github.pulls.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: prNumber
+                });
+                await github.pulls.merge({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: prNumber,
+                  merge_method: 'merge'
+                });
     
