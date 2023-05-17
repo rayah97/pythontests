@@ -27,12 +27,7 @@ jobs:
           path: test_results/
 
       - name: Merge code if tests pass
-        uses: peter-evans/create-pull-request@v3
-        with:
-            token: ${{ secrets.GITHUB_TOKEN }}
-            commit-message: Merge pull request
-            title: Merge pull request
-            branch: master
-            delete-branch: true
-            base: master
-      
+        run: |
+            pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+            echo "Merging pull request $pr_number..."
+            gh pr merge $pr_number --auto
