@@ -1,35 +1,39 @@
-name: Test Prime Calculator
+name: Python Test and Merge
 
 on:
   pull_request:
-    types: [opened]
+    branches:
+      - master
 
 jobs:
-  test:
+  test-and-merge:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: 3.x  # Specify the desired Python version
 
-      - name: Run unit tests
-        run: python -m unittest test_prime_calculator.py
+      - name: Install dependencies
+        run: pip install -r requirements.txt  # Adjust this command based on your project
+
+      - name: Run tests
+        run: python -m pytest  # Adjust this command based on your project
 
       - name: Upload test results
         uses: actions/upload-artifact@v2
         with:
           name: test-results
-          path: test_results/
+          path: pytest-report.xml  # Adjust this path based on your test result file
 
       - name: Merge code if tests pass
         env:
-            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-            pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-            echo "Merging pull request $pr_number..."
-            gh pr merge $pr_number --auto
+          pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          echo "Merging pull request $pr_number..."
+          gh pr merge $pr_number --merge
