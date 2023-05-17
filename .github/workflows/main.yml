@@ -3,7 +3,7 @@ name: Test Prime Calculator
 on:
   pull_request:
     types: [opened]
-    
+
 
 jobs:
   test:
