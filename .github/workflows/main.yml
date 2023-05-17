@@ -28,7 +28,7 @@ jobs:
 
       - name: Merge pull request
         run: |
-          npm install @octokit/rest@latest
+          npm install @octokit/rest@^17.0.0
           node -e "
             const { Octokit } = require('@octokit/rest');
             const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
@@ -41,5 +41,5 @@ jobs:
               merge_method: 'merge'
             });
           "
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
