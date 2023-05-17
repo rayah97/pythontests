@@ -35,3 +35,5 @@ jobs:
             allow_ff: false
         env:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              merge_command: 'merge'
+
