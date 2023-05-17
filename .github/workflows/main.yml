@@ -29,11 +29,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
     
-      - name: Merge command
-        uses: Goobles/gh-actions-merge-command@v1
-        with:
-            allow_ff: false
-        env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              merge_command: 'merge'
+      - name: Merge pull request
+        run: |
+          curl \
+            -X PUT \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge"
+      
 
