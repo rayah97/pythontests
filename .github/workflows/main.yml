@@ -18,7 +18,7 @@ jobs:
           python-version: 3.9
 
       - name: Run unit tests
-        run: python -m unittest test_prime_calculator.py > test_results.txt
+        run: python -m unittest test_prime_calculator.py > test_results.txt 2>&1
 
       - name: Upload test results
         uses: actions/upload-artifact@v2
