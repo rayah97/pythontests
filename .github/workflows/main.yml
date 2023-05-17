@@ -36,6 +36,17 @@ jobs:
         uses: pullreminders/merge-action@v4
         with:
               github_token: ${{ secrets.GITHUB_TOKEN }}
-              pull_request_number: ${{ github.event.pull_request.number }}
-              strategy: merge
+              script: |
+                const prNumber = context.payload.pull_request.number;
+                const { data: pr } = await github.pulls.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: prNumber
+                });
+                await github.pulls.merge({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: prNumber,
+                  merge_method: 'merge'
+                });
     
