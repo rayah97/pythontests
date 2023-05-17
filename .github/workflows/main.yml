@@ -26,20 +26,12 @@ jobs:
           name: test-results
           path: test_results/
 
-      - name: Merge pull request
-        run: |
-          npm install @octokit/rest@^17.0.0
-          node -e "
-            const { Octokit } = require('@octokit/rest');
-            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-
-            const prNumber = process.env.GITHUB_EVENT_PULL_REQUEST_NUMBER;
-            octokit.pulls.merge({
-              owner: process.env.GITHUB_REPOSITORY_OWNER,
-              repo: process.env.GITHUB_REPOSITORY,
-              pull_number: prNumber,
-              merge_method: 'merge'
-            });
-          "
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v1
+    
+      - name: Merge command
+        uses: Goobles/gh-actions-merge-command@v1
+        with:
+            allow_ff: false
+        env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
