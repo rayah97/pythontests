@@ -1,34 +1,30 @@
-name: Python Test and Merge
+name: Test Prime Calculator
 
 on:
   pull_request:
-    branches:
-      - master
+    types: [opened]
 
 jobs:
-  test-and-merge:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.x  # Specify the desired Python version
+          python-version: 3.9
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt  # Adjust this command based on your project
-
-      - name: Run tests
-        run: python -m pytest  # Adjust this command based on your project
+      - name: Run unit tests
+        run: python -m unittest test_prime_calculator.py
 
       - name: Upload test results
         uses: actions/upload-artifact@v2
         with:
           name: test-results
-          path: pytest-report.xml  # Adjust this path based on your test result file
+          path: test_results/
 
       - name: Merge code if tests pass
         env:
