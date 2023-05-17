@@ -27,6 +27,8 @@ jobs:
           path: test_results/
 
       - name: Merge code if tests pass
+        env:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
             pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
             echo "Merging pull request $pr_number..."
