@@ -30,3 +30,11 @@ jobs:
         with:
             name: test-results
             path: test_results/
+      - name: Merge pull request
+        uses: pullreminders/merge-action@v4
+        with:
+              github_token: ${{ secrets.GITHUB_TOKEN }}
+              pull_request_number: ${{ github.event.pull_request.number }}
+              strategy: merge
+    
+    
