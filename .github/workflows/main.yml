@@ -26,14 +26,13 @@ jobs:
           name: test-results
           path: test_results/
 
-      - name: Checkout
-        uses: actions/checkout@v1
-    
-      - name: Merge pull request
-        run: |
-          curl \
-            -X PUT \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge"
+      - name: Merge code if tests pass
+        uses: peter-evans/create-pull-request@v3
+        with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+            commit-message: Merge pull request
+            title: Merge pull request
+            branch: master
+            delete-branch: true
+            base: master
       
