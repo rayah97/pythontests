@@ -4,8 +4,6 @@ on:
   pull_request:
     types: [opened]
 
-
-    
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -19,10 +17,8 @@ jobs:
         with:
           python-version: 3.9
 
-
-      - name: Run unit tests
-        run: python -m unittest test_prime_calculator.py
-
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
       - name: Run unit tests
         run: python -m unittest test_prime_calculator.py
@@ -30,23 +26,23 @@ jobs:
       - name: Upload test results
         uses: actions/upload-artifact@v2
         with:
-            name: test-results
-            path: test_results/
+          name: test-results
+          path: test_results/
+
       - name: Merge pull request
-        uses: actions/github-script@v5
-        with:
-              github_token: ${{ secrets.GITHUB_TOKEN }}
-              script: |
-                const prNumber = context.payload.pull_request.number;
-                const { data: pr } = await github.pulls.get({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  pull_number: prNumber
-                });
-                await github.pulls.merge({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  pull_number: prNumber,
-                  merge_method: 'merge'
-                });
-    
+        run: |
+          npm install @octokit/rest@latest
+          node -e "
+            const { Octokit } = require('@octokit/rest');
+            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+
+            const prNumber = process.env.GITHUB_EVENT_PULL_REQUEST_NUMBER;
+            octokit.pulls.merge({
+              owner: process.env.GITHUB_REPOSITORY_OWNER,
+              repo: process.env.GITHUB_REPOSITORY,
+              pull_number: prNumber,
+              merge_method: 'merge'
+            });
+          "
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
